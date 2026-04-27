@@ -1,24 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>FinGuru Dashboard</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-    <nav class = "navbar">
-        <ul>
-            <li><a href = "dashboard.html">Dashboard</a></li>
-            <li><a href="goals.html">Financial Goals</a></li>
-            <li><a href="investment-recommendation.html">Investment Recommendation</a></li>
-            <li><a href="market-insights.html">Market Insights</a></li>
-            <li><a href="roi-calculator.html">ROI Calculator</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            
-        
-        </ul>
-    </nav>
+    <!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
+  <div class="container">
+
+    <!-- BRAND -->
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">
+      <span></span>
+      <span>FinGuru</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="nav">
+
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+        <!-- CORE -->
+        <li class="nav-item">
+          <a class="nav-link" href="dashboard.html">Dashboard</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="goals.html">Goals</a>
+        </li>
+
+        <!-- TOOLS -->
+        <li class="nav-item">
+          <a class="nav-link" href="roi-calculator.html">ROI</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="investment-recommendation.html">Invest</a>
+        </li>
+
+        <!-- INSIGHTS -->
+        <li class="nav-item">
+          <a class="nav-link" href="market-insights.html">Markets</a>
+        </li>
+
+        <!-- PROFILE (SPECIAL STYLE) -->
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link profile-link" href="profile.html">Profile</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
 
 
     
