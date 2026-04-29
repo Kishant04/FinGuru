@@ -2,27 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FinGuru Dashboard</title>
-
-  <!-- Bootstrap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROI Calculator | FinGuru</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="../css/styles.css">
 </head>
-
 <body>
-    <!-- NAVBAR -->
+
+
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
   <div class="container">
 
-    <!-- BRAND -->
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">
-      <span></span>
-      <span>FinGuru</span>
+      FinGuru
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#nav"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -30,7 +30,6 @@
 
       <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-        <!-- CORE -->
         <li class="nav-item">
           <a class="nav-link" href="dashboard.html">Dashboard</a>
         </li>
@@ -39,23 +38,28 @@
           <a class="nav-link" href="goals.html">Goals</a>
         </li>
 
-        <!-- TOOLS -->
         <li class="nav-item">
-          <a class="nav-link" href="roi-calculator.html">ROI</a>
+          <a class="nav-link active" href="roi-calculator.html">ROI</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" href="investment-recommendation.html">Invest</a>
         </li>
 
-        <!-- INSIGHTS -->
         <li class="nav-item">
           <a class="nav-link" href="market-insights.html">Markets</a>
         </li>
 
-        <!-- PROFILE (SPECIAL STYLE) -->
         <li class="nav-item ms-lg-2">
-          <a class="nav-link profile-link" href="profile.html">Profile</a>
+          <a class="nav-link profile-link" href="profile.html">
+            Profile
+          </a>
+        </li>
+
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link btn btn-outline-light btn-sm" href="#" id="logoutLink">
+            Logout
+          </a>
         </li>
 
       </ul>
@@ -63,5 +67,70 @@
     </div>
   </div>
 </nav>
+
+<div class="container mt-5">
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4">ROI Calculator</h3>
+
+        <form id="roiForm">
+          <div class="mb-3">
+            <label>Initial Investment (RM)</label>
+            <input type="number" class="form-control" id="initialInvestment" required>
+          </div>
+
+          <div class="mb-3">
+            <label>Final Value (RM)</label>
+            <input type="number" class="form-control" id="finalValue" required>
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">
+            Calculate ROI
+          </button>
+        </form>
+        <div class="mt-4">
+          <h5>ROI Result</h5>
+          <p id="roiResult">0%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4">Compound Interest Calculator</h3>
+
+        <form id="compoundForm">
+
+          <div class="mb-3">
+            <label>Principal Amount (RM)</label>
+            <input type="number" class="form-control" id="principal" required>
+          </div>
+
+          <div class="mb-3">
+            <label>Annual Interest Rate (%)</label>
+            <input type="number" class="form-control" id="interestRate" required>
+          </div>
+          <div class="mb-3">
+            <label>Years</label>
+            <input type="number" class="form-control" id="years" required>
+          </div>
+
+          <button class="btn btn-success w-100" type="submit">
+            Calculate Growth
+          </button>
+        </form>
+
+        <div class="mt-4">
+          <h5>Future Value</h5>
+          <p id="compoundResult">RM 0</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="../js/app.js"></script>
 </body>
 </html>

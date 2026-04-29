@@ -74,3 +74,42 @@ h2 {
   transition: width 0.6s ease;
   font-weight: bold;
 }
+
+
+.market-card {
+  border-radius: 15px;
+  transition: 0.3s ease;
+}
+
+.market-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.market-card .card-title {
+  font-weight: 600;
+}
+
+/* INVESTMENT RECOMMENDATION */
+
+.recommendation-card {
+  border-radius: 15px;
+  transition: 0.3s ease;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.recommendation-card h4 {
+  font-weight: 600;
+}
+
+.recommendation-card ul {
+  padding-left: 18px;
+}
+
+.recommendation-card li {
+  margin-bottom: 8px;
+}
