@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+
+
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">FinGuru</a>
@@ -27,6 +29,7 @@
     </div>
   </div>
 </nav>
+
 <div class="container mt-4">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -37,6 +40,7 @@
       <span class="badge bg-primary" id="riskLevelBadge">Risk Level: Moderate</span>
     </div>
   </div>
+
   <div class="row g-3 mb-4">
     <div class="col-md-4">
       <div class="card dashboard-card p-3">
@@ -50,6 +54,7 @@
         <h3 id="totalSavings">RM 0</h3>
       </div>
     </div>
+
     <div class="col-md-4">
       <div class="card dashboard-card p-3">
         <h6 class="text-muted">Budget Balance</h6>
@@ -57,6 +62,7 @@
       </div>
     </div>
   </div>
+
   <div class="row g-4">
     <div class="col-lg-6">
       <div class="card p-4 shadow-sm">
@@ -66,6 +72,7 @@
             <label class="form-label">Monthly Income (RM)</label>
             <input type="number" id="budgetIncome" class="form-control" placeholder="Enter income" min="0" required>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Monthly Expenses (RM)</label>
             <input type="number" id="budgetExpenses" class="form-control" placeholder="Enter expenses" min="0" required>
@@ -79,6 +86,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-6">
       <div class="card p-4 shadow-sm">
         <h5 class="mb-3">Risk Profiling Quiz</h5>
@@ -92,6 +100,7 @@
               <option value="3">More than 5 years</option>
             </select>
           </div>
+
           <div class="mb-3">
             <label class="form-label">2. Comfort with market swings?</label>
             <select class="form-select" id="riskQuestion2" required>
@@ -101,6 +110,7 @@
               <option value="3">Very comfortable</option>
             </select>
           </div>
+
           <div class="mb-3">
             <label class="form-label">3. Primary goal?</label>
             <select class="form-select" id="riskQuestion3" required>
@@ -110,6 +120,7 @@
               <option value="3">Aggressive growth</option>
             </select>
           </div>
+
           <div class="mb-3">
             <label class="form-label">4. Reaction to a 15% drop in investments?</label>
             <select class="form-select" id="riskQuestion4" required>
@@ -119,6 +130,7 @@
               <option value="3">Buy more</option>
             </select>
           </div>
+
           <div class="mb-3">
             <label class="form-label">5. Current savings enough for emergencies?</label>
             <select class="form-select" id="riskQuestion5" required>
@@ -130,6 +142,7 @@
           </div>
           <button type="submit" class="btn btn-primary">Calculate Risk Level</button>
         </form>
+
         <div class="mt-4">
           <h6>Your risk profile</h6>
           <p id="riskResult">Your current risk level will appear after submitting the quiz.</p>
@@ -138,6 +151,7 @@
     </div>
   </div>
 </div>
+
 <script src="../js/app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -181,11 +181,11 @@ function initRegister() {
 function updateBudgetSummary() {
   const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
   const totalSavings = getStorage(STORAGE_KEYS.goals, []).reduce((sum, goal) => sum + Number(goal.saved || 0), 0);
-  document.getElementById('balance')?.textContent = budget.balance.toFixed(2);
-  document.getElementById('budgetResult')?.textContent = budget.balance.toFixed(2);
-  document.getElementById('budgetStatus')?.textContent = budget.status;
-  document.getElementById('profileBalance')?.textContent = budget.balance.toFixed(2);
-  document.getElementById('profileSavings')?.textContent = totalSavings.toFixed(2);
+  document.getElementById('balance').textContent = budget.balance.toFixed(2);
+  document.getElementById('budgetResult').textContent = budget.balance.toFixed(2);
+  document.getElementById('budgetStatus').textContent = budget.status;
+  document.getElementById('profileBalance').textContent = budget.balance.toFixed(2);
+  document.getElementById('profileSavings').textContent = totalSavings.toFixed(2);
 }
 
 function updateDashboardTotals() {
@@ -193,17 +193,17 @@ function updateDashboardTotals() {
   const totalGoals = goals.length;
   const totalSavings = goals.reduce((sum, goal) => sum + Number(goal.saved || 0), 0);
   const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
-  document.getElementById('totalGoals')?.textContent = totalGoals;
-  document.getElementById('totalSavings')?.textContent = `RM ${totalSavings.toFixed(2)}`;
-  document.getElementById('balance')?.textContent = `RM ${budget.balance.toFixed(2)}`;
+  document.getElementById('totalGoals').textContent = totalGoals;
+  document.getElementById('totalSavings').textContent = `RM ${totalSavings.toFixed(2)}`;
+  document.getElementById('balance').textContent = `RM ${budget.balance.toFixed(2)}`;
 }
 
 function updateRiskDisplay() {
   const riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
-  document.getElementById('riskLevelBadge')?.textContent = `Risk Level: ${riskLevel}`;
-  document.getElementById('recommendationRisk')?.textContent = riskLevel;
-  document.getElementById('riskResult')?.textContent = `Saved risk profile: ${riskLevel}`;
-  document.getElementById('profileRisk')?.textContent = riskLevel;
+  document.getElementById('riskLevelBadge').textContent = `Risk Level: ${riskLevel}`;
+  document.getElementById('recommendationRisk').textContent = riskLevel;
+  document.getElementById('riskResult').textContent = `Saved risk profile: ${riskLevel}`;
+  document.getElementById('profileRisk').textContent = riskLevel;
 }
 
 function calculateRiskLevel(score) {
@@ -271,13 +271,26 @@ function renderGoalsTable() {
   }
   tbody.innerHTML = '';
   if (goals.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No goals added yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No goals added yet.</td></tr>';
     return;
   }
-  goals.forEach((goal) => {
+
+  goals.forEach((goal, index) => {
     const target = Number(goal.target || 0);
     const saved = Number(goal.saved || 0);
     const progress = target === 0 ? 0 : Math.min(100, Math.round((saved / target) * 100));
+
+    let barColor;
+    if (progress === 100) {
+      barColor = 'bg-success';      // green  — complete
+    } else if (progress >= 50) {
+      barColor = 'bg-info';         // blue   — halfway there
+    } else if (progress >= 25) {
+      barColor = 'bg-warning';      // yellow — just started
+    } else {
+      barColor = 'bg-danger';       // red    — barely started
+    }
+
     tbody.innerHTML += `
       <tr>
         <td>${goal.name}</td>
@@ -285,12 +298,17 @@ function renderGoalsTable() {
         <td>RM ${saved.toFixed(2)}</td>
         <td>
           <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar" style="width: ${progress}%">${progress}%</div>
+            <div class="progress-bar ${barColor}" role="progressbar" style="width: ${progress}%">${progress}%</div>
           </div>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="deleteGoal(${index})">Delete
+          </button>
         </td>
       </tr>
     `;
   });
+  
 }
 
 function initGoals() {
@@ -315,6 +333,19 @@ function initGoals() {
     });
   }
   renderGoalsTable();
+}
+
+function deleteGoal(index) {
+  const goals = getStorage(STORAGE_KEYS.goals, []);
+  if (index >= 0 && index < goals.length) {
+    goals.splice(index, 1);
+    setStorage(STORAGE_KEYS.goals, goals);
+    renderGoalsTable();
+    updateDashboardTotals();
+    setAlert('goalAlert', 'Goal deleted successfully.', 'success');
+  } else {
+    setAlert('goalAlert', 'Invalid goal index.', 'danger');
+  }
 }
 
 function initRoiCalculator() {
@@ -390,12 +421,12 @@ function initProfile() {
   const goals = getStorage(STORAGE_KEYS.goals, []);
   const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
   if (user) {
-    document.getElementById('profileName')?.textContent = user.name;
-    document.getElementById('profileEmail')?.textContent = user.email;
+    document.getElementById('profileName').textContent = user.name;
+    document.getElementById('profileEmail').textContent = user.email;
   }
-  document.getElementById('profileGoalsCount')?.textContent = goals.length;
-  document.getElementById('profileSavings')?.textContent = goals.reduce((sum, goal) => sum + Number(goal.saved || 0), 0).toFixed(2);
-  document.getElementById('profileBudgetStatus')?.textContent = budget.status;
+  document.getElementById('profileGoalsCount').textContent = goals.length;
+  document.getElementById('profileSavings').textContent = goals.reduce((sum, goal) => sum + Number(goal.saved || 0), 0).toFixed(2);
+  document.getElementById('profileBudgetStatus').textContent = budget.status;
   updateRiskDisplay();
 }
 
@@ -620,7 +651,9 @@ if (loginForm) {
       alert("Invalid email or password!");
     }
   });
-  const profileName = document.getElementById("profileName");
+}
+
+const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 
@@ -666,6 +699,9 @@ if (roiForm) {
     const finalValue = parseFloat(document.getElementById("finalValue").value);
 
     const roi = ((finalValue - initialInvestment) / initialInvestment) * 100;
-    document.getElementById("roiResult").textCont
+    document.getElementById("roiResult").textContent = `ROI: ${roi.toFixed(2)}%`;
+  });
+}
+    
 
 document.addEventListener('DOMContentLoaded', initPage);
