@@ -5,19 +5,29 @@ body {
 }
 
 .container {
-  max-width: 1600px;
+  max-width: 1800px;
 }
 
 /* ===== NAVBAR ===== */
 .custom-navbar {
   background: linear-gradient(90deg, #1f2a44, #35526e);
+  padding: 12px 0;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+
+.custom-navbar .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* base links */
 .custom-navbar .nav-link {
   color: rgba(255,255,255,0.75);
   font-weight: 500;
-  padding: 8px 12px;
+  font-size: 1.1rem; /* 🔥 slightly bigger text */
+  padding: 10px 16px; /* 🔥 more clickable area */
   border-radius: 8px;
   transition: 0.2s ease;
 }
@@ -49,6 +59,9 @@ body {
 .navbar-nav {
   font-size: 0.95rem;
 }
+
+
+
 
 /* ===== DASHBOARD CARDS ===== */
 .dashboard-card {
