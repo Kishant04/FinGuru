@@ -1,7 +1,8 @@
 /* ===== GLOBAL ===== */
 body {
-  background-color:#f8f9fa;
+  background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
   font-family: 'Monaco', monospace;
+  min-height: 100vh;
 }
 
 .container {
@@ -10,41 +11,39 @@ body {
 
 /* ===== NAVBAR ===== */
 .custom-navbar {
-  background: linear-gradient(90deg, #1f2a44, #35526e);
-  padding: 12px 0;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(90deg, #1f2a44, #2f4b6c);
+  padding: 14px 0;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
-
 
 .custom-navbar .navbar-brand {
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-/* base links */
+/* NAV LINKS */
 .custom-navbar .nav-link {
   color: rgba(255,255,255,0.75);
   font-weight: 500;
-  font-size: 1.1rem; /* 🔥 slightly bigger text */
-  padding: 10px 16px; /* 🔥 more clickable area */
+  font-size: 1.05rem;
+  padding: 10px 16px;
   border-radius: 8px;
   transition: 0.2s ease;
 }
 
-/* hover */
 .custom-navbar .nav-link:hover {
   color: #fff;
   background: rgba(255,255,255,0.08);
 }
 
-/* active page */
 .nav-link.active {
   background: rgba(0, 212, 255, 0.15);
   color: #00d4ff !important;
-  border-radius: 8px;
 }
-/* profile special button */
+
+/* PROFILE BUTTON */
 .profile-link {
   background: #00d4ff;
   color: #001b2e !important;
@@ -56,73 +55,128 @@ body {
   background: #00b8e6;
 }
 
-.navbar-nav {
-  font-size: 0.95rem;
-}
-
-
-
-
-/* ===== DASHBOARD CARDS ===== */
-.dashboard-card {
-  /* border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  transition: 0.2s; */
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-}
-
-.dashboard-card:hover {
-  /* transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1); */
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  transition: 0.2s ease;
-}
-
 /* ===== HEADINGS ===== */
 h2, h3, h4, h5 {
   font-weight: 700;
   color: #1f2a44;
 }
 
-/* ===== PROGRESS BARS ===== */
+h2 {
+  font-size: 1.8rem;
+}
 
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-card {
+  border: none;
+  border-radius: 16px;
+  padding: 18px;
+  background: linear-gradient(145deg, #ffffff, #f1f5fb);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* top glow line */
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #00d4ff, #007bff);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* ===== GENERAL CARDS ===== */
+.card {
+  border-radius: 16px;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+/* ===== RISK BADGE ===== */
+#riskBadge {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #00d4ff, #007bff);
+  box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  background: linear-gradient(135deg, #00d4ff, #007bff);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #00b8e6, #0056b3);
+  transform: translateY(-1px);
+}
+
+/* ===== INPUTS ===== */
+.form-control, .form-select {
+  border-radius: 10px;
+  border: 1px solid #dfe6f1;
+  transition: 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+}
+
+/* ===== PROGRESS BAR ===== */
 .progress {
   height: 20px;
   border-radius: 10px;
+  background-color: #e9edf5;
 }
 
 .progress-bar {
   transition: width 0.6s ease;
   font-weight: bold;
+  background: linear-gradient(135deg, #00d4ff, #007bff);
 }
 
-
+/* ===== MARKET CARDS ===== */
 .market-card {
   border-radius: 15px;
   transition: 0.3s ease;
 }
 
 .market-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
 }
 
 .market-card .card-title {
   font-weight: 600;
 }
 
-/* INVESTMENT RECOMMENDATION */
-
+/* ===== RECOMMENDATION CARDS ===== */
 .recommendation-card {
   border-radius: 15px;
   transition: 0.3s ease;
 }
 
 .recommendation-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
 }
 
 .recommendation-card h4 {
@@ -135,4 +189,9 @@ h2, h3, h4, h5 {
 
 .recommendation-card li {
   margin-bottom: 8px;
+}
+
+/* ===== TEXT ===== */
+.text-muted {
+  color: #6c7a89 !important;
 }
