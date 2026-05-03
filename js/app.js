@@ -100,7 +100,7 @@ function getPasswordStrengthLabel(password) {
 }
 
 function redirectToDashboard() {
-  window.location.href = 'pages/dashboard.html';
+  window.location.href = 'dashboard.html';
 }
 
 function initLogin() {
@@ -436,26 +436,6 @@ if (saveProfileBtn) {
   });
 }
 
-// =====================================
-// ROI CALCULATOR
-// =====================================
-
-const roiForm = document.getElementById("roiForm");
-
-if (roiForm) {
-
-  roiForm.addEventListener("submit", function (e) {
-
-    e.preventDefault();
-
-    const initialInvestment = parseFloat(document.getElementById("initialInvestment").value);
-
-    const finalValue = parseFloat(document.getElementById("finalValue").value);
-
-    const roi = ((finalValue - initialInvestment) / initialInvestment) * 100;
-    document.getElementById("roiResult").textContent = `ROI: ${roi.toFixed(2)}%`;
-  });
-}    
 
 document.addEventListener('DOMContentLoaded', initPage);
 
