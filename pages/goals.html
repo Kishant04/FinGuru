@@ -18,13 +18,16 @@
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
   <div class="container">
 
-    <!-- BRAND -->
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">
-      <span></span>
-      <span>FinGuru</span>
+      FinGuru
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#nav"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -32,16 +35,14 @@
 
       <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-        <!-- CORE -->
         <li class="nav-item">
           <a class="nav-link" href="dashboard.html">Dashboard</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="goals.html">Goals</a>
+          <a class="nav-link active" href="goals.html">Goals</a>
         </li>
 
-        <!-- TOOLS -->
         <li class="nav-item">
           <a class="nav-link" href="roi-calculator.html">ROI</a>
         </li>
@@ -50,14 +51,20 @@
           <a class="nav-link" href="investment-recommendation.html">Invest</a>
         </li>
 
-        <!-- INSIGHTS -->
         <li class="nav-item">
           <a class="nav-link" href="market-insights.html">Markets</a>
         </li>
 
-        <!-- PROFILE (SPECIAL STYLE) -->
         <li class="nav-item ms-lg-2">
-          <a class="nav-link profile-link" href="profile.html">Profile</a>
+          <a class="nav-link profile-link" href="profile.html">
+            Profile
+          </a>
+        </li>
+
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link btn btn-outline-light btn-sm" href="#" id="logoutLink">
+            Logout
+          </a>
         </li>
 
       </ul>
@@ -71,56 +78,59 @@
 
   <h2 class="mb-4">Financial Goals</h2>
 
-  <!-- ADD GOAL FORM -->
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5>Add New Goal</h5>
+  <div class="row g-3">
 
-      <form id="goalForm">
-        <div class="mb-3">
-          <label class="form-label">Goal Name</label>
-          <input type="text" class="form-control" id="goalName" placeholder="e.g. Buy House">
+    <!-- Add Goal Form -->
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5>Add New Goal</h5>
+          <form id="goalForm">
+            <div class="mb-3">
+              <label class="form-label">Goal Name</label>
+              <input type="text" class="form-control" id="goalName" placeholder="e.g. Buy House">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Target Amount (RM)</label>
+              <input type="number" class="form-control" id="goalTarget" placeholder="e.g. 100000" min="0" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Saved Amount (RM)</label>
+              <input type="number" class="form-control" id="goalSaved" placeholder="e.g. 30000" min="0" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Goal</button>
+            <div id="goalAlert" class="mt-3"></div>
+          </form>
         </div>
-
-        <div class="mb-3">
-          <label class="form-label">Target Amount (RM)</label>
-          <input type="number" class="form-control" id ="goalTarget" placeholder="e.g. 100000" min="0" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Saved Amount (RM)</label>
-          <input type="number" class="form-control" id="goalSaved" placeholder="e.g. 30000" min="0" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Add Goal</button>
-      </form>
+      </div>
     </div>
-  </div>
 
-  <!-- GOALS TABLE -->
-  <div class="card">
-    <div class="card-body">
-      <h5>Your Goals</h5>
-
-      <table class="table table-bordered mt-3">
-        <thead class="table-dark">
-          <tr>
-            <th>Name</th>
-            <th>Target</th>
-            <th>Saved</th>
-            <th>Progress</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody  id = "goalTableBody">
-          <!-- Goals will be dynamically inserted here -->
-        </tbody>
-
-      </table>
+    <!-- RIGHT: Goals Table -->
+    <div class="col-lg-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5>Your Goals</h5>
+          <div class="table-responsive">
+            <table class="table table-bordered mt-3">
+              <thead class="table-dark">
+                <tr>
+                  <th>Name</th>
+                  <th>Target</th>
+                  <th>Saved</th>
+                  <th>Progress</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="goalTableBody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
+  </div>
 </div>
 
 

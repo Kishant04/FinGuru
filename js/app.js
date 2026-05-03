@@ -702,6 +702,73 @@ if (roiForm) {
     document.getElementById("roiResult").textContent = `ROI: ${roi.toFixed(2)}%`;
   });
 }
+
+// =====================================
+//  CHARTS
+// =====================================
+
+function initCharts() {
+  const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0 });
+  const goals = getStorage(STORAGE_KEYS.goals, []);
+
+  // ── Budget Doughnut Chart ──
+  const budgetCanvas = document.getElementById('budgetChart');
+  if (budgetCanvas) {
+    new Chart(budgetCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Expenses', 'Savings'],
+        datasets: [{
+          data: [budget.expenses, budget.balance],
+          backgroundColor: ['#dc3545', '#198754'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+
+  // ── Goals Bar Chart ──
+  const goalsCanvas = document.getElementById('goalsChart');
+  if (goalsCanvas) {
+    new Chart(goalsCanvas, {
+      type: 'bar',
+      data: {
+        labels: goals.map(g => g.name),
+        datasets: [
+          {
+            label: 'Saved (RM)',
+            data: goals.map(g => Number(g.saved)),
+            backgroundColor: '#0d6efd',
+          },
+          {
+            label: 'Target (RM)',
+            data: goals.map(g => Number(g.target)),
+            backgroundColor: '#dee2e6',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  }
+}
     
 
 document.addEventListener('DOMContentLoaded', initPage);
+
+document.addEventListener('DOMContentLoaded', function() {
+  const page = getPageName();
+  if (page === 'dashboard.html') initCharts();
+});

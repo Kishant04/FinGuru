@@ -9,7 +9,6 @@
 </head>
 <body>
 
-
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">FinGuru</a>
@@ -31,6 +30,8 @@
 </nav>
 
 <div class="container mt-4">
+
+  <!-- PAGE TITLE -->
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
     <div>
       <h2>Dashboard</h2>
@@ -41,6 +42,7 @@
     </div>
   </div>
 
+  <!-- ROW 1: STAT CARDS -->
   <div class="row g-3 mb-4">
     <div class="col-md-4">
       <div class="card dashboard-card p-3">
@@ -54,7 +56,6 @@
         <h3 id="totalSavings">RM 0</h3>
       </div>
     </div>
-
     <div class="col-md-4">
       <div class="card dashboard-card p-3">
         <h6 class="text-muted">Budget Balance</h6>
@@ -63,96 +64,114 @@
     </div>
   </div>
 
-  <div class="row g-4">
-    <div class="col-lg-6">
-      <div class="card p-4 shadow-sm">
-        <h5 class="mb-3">Budget Analyzer</h5>
-        <form id="budgetForm" novalidate>
-          <div class="mb-3">
-            <label class="form-label">Monthly Income (RM)</label>
-            <input type="number" id="budgetIncome" class="form-control" placeholder="Enter income" min="0" required>
-          </div>
+  <!-- ROW 2: CHARTS + RISK QUIZ -->
+  <div class="row g-3 mb-4">
 
-          <div class="mb-3">
-            <label class="form-label">Monthly Expenses (RM)</label>
-            <input type="number" id="budgetExpenses" class="form-control" placeholder="Enter expenses" min="0" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Analyze Budget</button>
-        </form>
-        <div class="mt-4">
-          <h6>Budget Status</h6>
-          <p id="budgetStatus" class="mb-1">Enter your income and expenses to see your balance.</p>
-          <p><strong>Balance:</strong> RM <span id="budgetResult">0</span></p>
-        </div>
+    <div class="col-lg-4">
+      <div class="card p-4 shadow-sm h-100">
+        <h5 class="mb-3">Budget Breakdown</h5>
+        <canvas id="budgetChart"></canvas>
       </div>
     </div>
 
-    <div class="col-lg-6">
-      <div class="card p-4 shadow-sm">
+    <div class="col-lg-4">
+      <div class="card p-4 shadow-sm h-100">
+        <h5 class="mb-3">Goals Progress</h5>
+        <canvas id="goalsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card p-4 shadow-sm h-100">
         <h5 class="mb-3">Risk Profiling Quiz</h5>
         <form id="riskQuizForm">
-          <div class="mb-3">
+          <div class="mb-2">
             <label class="form-label">1. Your investment timeline?</label>
-            <select class="form-select" id="riskQuestion1" required>
+            <select class="form-select form-select-sm" id="riskQuestion1" required>
               <option value="">Choose one</option>
               <option value="1">Less than 2 years</option>
               <option value="2">2 to 5 years</option>
               <option value="3">More than 5 years</option>
             </select>
           </div>
-
-          <div class="mb-3">
+          <div class="mb-2">
             <label class="form-label">2. Comfort with market swings?</label>
-            <select class="form-select" id="riskQuestion2" required>
+            <select class="form-select form-select-sm" id="riskQuestion2" required>
               <option value="">Choose one</option>
               <option value="1">Very uncomfortable</option>
               <option value="2">Somewhat comfortable</option>
               <option value="3">Very comfortable</option>
             </select>
           </div>
-
-          <div class="mb-3">
+          <div class="mb-2">
             <label class="form-label">3. Primary goal?</label>
-            <select class="form-select" id="riskQuestion3" required>
+            <select class="form-select form-select-sm" id="riskQuestion3" required>
               <option value="">Choose one</option>
               <option value="1">Protect savings</option>
               <option value="2">Balanced growth</option>
               <option value="3">Aggressive growth</option>
             </select>
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">4. Reaction to a 15% drop in investments?</label>
-            <select class="form-select" id="riskQuestion4" required>
+          <div class="mb-2">
+            <label class="form-label">4. Reaction to a 15% drop?</label>
+            <select class="form-select form-select-sm" id="riskQuestion4" required>
               <option value="">Choose one</option>
               <option value="1">Sell immediately</option>
               <option value="2">Wait and review</option>
               <option value="3">Buy more</option>
             </select>
           </div>
-
           <div class="mb-3">
-            <label class="form-label">5. Current savings enough for emergencies?</label>
-            <select class="form-select" id="riskQuestion5" required>
+            <label class="form-label">5. Emergency savings ready?</label>
+            <select class="form-select form-select-sm" id="riskQuestion5" required>
               <option value="">Choose one</option>
               <option value="1">Not enough</option>
               <option value="2">Somewhat prepared</option>
               <option value="3">Well covered</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Calculate Risk Level</button>
+          <button type="submit" class="btn btn-primary btn-sm w-100">Calculate Risk Level</button>
         </form>
+        <div class="mt-3">
+          <p id="riskResult" class="mb-0 text-muted small">Your risk level will appear after submitting.</p>
+        </div>
+      </div>
+    </div>
 
-        <div class="mt-4">
-          <h6>Your risk profile</h6>
-          <p id="riskResult">Your current risk level will appear after submitting the quiz.</p>
+  </div>
+
+  <!-- ROW 3: BUDGET ANALYZER FULL WIDTH -->
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <div class="card p-4 shadow-sm">
+        <h5 class="mb-3">Budget Analyzer</h5>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label">Monthly Income (RM)</label>
+            <input type="number" id="budgetIncome" class="form-control" placeholder="Enter income" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Monthly Expenses (RM)</label>
+            <input type="number" id="budgetExpenses" class="form-control" placeholder="Enter expenses" min="0">
+          </div>
+          <div class="col-md-4">
+            <form id="budgetForm">
+              <button type="submit" class="btn btn-primary w-100">Analyze Budget</button>
+            </form>
+          </div>
+        </div>
+        <div class="mt-3">
+          <p id="budgetStatus" class="mb-1 text-muted">Enter your income and expenses to see your balance.</p>
+          <p class="mb-0"><strong>Balance:</strong> RM <span id="budgetResult">0</span></p>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 
-<script src="../js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/app.js"></script>
 </body>
 </html>
