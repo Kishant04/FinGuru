@@ -100,7 +100,7 @@ function getPasswordStrengthLabel(password) {
 }
 
 function redirectToDashboard() {
-  window.location.href = 'pages/dashboard.html';
+  window.location.href = 'dashboard.html';
 }
 
 function initLogin() {
