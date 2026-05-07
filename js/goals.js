@@ -17,13 +17,13 @@ function renderGoalsTable() {
 
     let barColor;
     if (progress === 100) {
-      barColor = 'bg-success';      // green  — complete
+      barColor = 'bg-success';      // green  complete
     } else if (progress >= 50) {
-      barColor = 'bg-info';         // blue   — halfway there
+      barColor = 'bg-info';         // blue   halfway there
     } else if (progress >= 25) {
-      barColor = 'bg-warning';      // yellow — just started
+      barColor = 'bg-warning';      // yellow just started
     } else {
-      barColor = 'bg-danger';       // red    — barely started
+      barColor = 'bg-danger';       // red    barely started
     }
 
     tbody.innerHTML += `
