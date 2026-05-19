@@ -10,7 +10,7 @@ const config = {
 };
 
 let currentCat = config[category] || config.stock;
-let page = 1;     // current page number
+let page = 1;     // current pagea number
 const pageSize = 10;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -46,7 +46,7 @@ async function loadNews(p) {
       return;
     }
 
-    container.innerHTML = articles.map(a => `
+    container.innerHTML += articles.map(a => `
       <div class="col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
