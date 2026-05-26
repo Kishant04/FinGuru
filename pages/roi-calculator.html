@@ -93,6 +93,7 @@
         <div class="mt-4">
           <h5>ROI Result</h5>
           <p id="roiResult">0%</p>
+          <p class="mb-0">Profit: <span id="profitResult">RM 0.00</span></p>
         </div>
       </div>
     </div>
@@ -105,16 +106,22 @@
 
           <div class="mb-3">
             <label>Principal Amount (RM)</label>
-            <input type="number" class="form-control" id="principal" required>
+            <input type="number" class="form-control" id="compoundPrincipal" required>
           </div>
 
           <div class="mb-3">
             <label>Annual Interest Rate (%)</label>
-            <input type="number" class="form-control" id="interestRate" required>
+            <input type="number" class="form-control" id="compoundRate" required>
           </div>
+
+          <div class="mb-3">
+            <label>Compounding Frequency (per year)</label>
+            <input type="number" class="form-control" id="compoundFrequency" required value="1" min="1">
+          </div>
+
           <div class="mb-3">
             <label>Years</label>
-            <input type="number" class="form-control" id="years" required>
+            <input type="number" class="form-control" id="compoundYears" required>
           </div>
 
           <button class="btn btn-success w-100" type="submit">
@@ -125,6 +132,7 @@
         <div class="mt-4">
           <h5>Future Value</h5>
           <p id="compoundResult">RM 0</p>
+          <p class="mb-0">Interest Earned: <span id="compoundInterestResult">RM 0.00</span></p>
         </div>
       </div>
     </div>

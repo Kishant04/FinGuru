@@ -1,10 +1,11 @@
 function initRoiCalculator() {
+  // roi fixed
   const roiForm = document.getElementById('roiForm');
   if (roiForm) {
     roiForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      const initial = Number(document.getElementById('initialAmount').value);
-      const finalValue = Number(document.getElementById('finalAmount').value);
+      const initial = Number(document.getElementById('initialInvestment').value);
+      const finalValue = Number(document.getElementById('finalValue').value);
       if (isNaN(initial) || isNaN(finalValue) || initial <= 0 || finalValue < 0) {
         setAlert('roiResult', 'Please enter valid investment values.', 'danger');
         return;
