@@ -1,0 +1,54 @@
+erDiagram
+    USERS ||--o{ GOALS : has_many
+    USERS ||--|| BUDGETS : has_one
+    USERS ||--|| RISKPROFILES : has_one
+    USERS ||--o{ ROICALCULATIONS : has_many
+
+    USERS {
+        string _id PK
+        string name
+        string email
+        string password
+        date createdAt
+        date updatedAt
+    }
+
+    GOALS {
+        string _id PK
+        string userId FK
+        string name
+        number target
+        number saved
+        date createdAt
+        date updatedAt
+    }
+
+    BUDGETS {
+        string _id PK
+        string userId FK
+        number income
+        number expenses
+        number balance
+        string status
+        date createdAt
+        date updatedAt
+    }
+
+    RISKPROFILES {
+        string _id PK
+        string userId FK
+        number score
+        string level
+        date createdAt
+        date updatedAt
+    }
+
+    ROICALCULATIONS {
+        string _id PK
+        string userId FK
+        string type
+        string inputs
+        string results
+        date createdAt
+        date updatedAt
+    }
