@@ -34,6 +34,53 @@ function initRoiCalculator() {
       document.getElementById('compoundInterestResult').textContent = `RM ${earned.toFixed(2)}`;
     });
   }
+  const compareBtn = document.getElementById('compareBtn');
+if (compareBtn) {
+  compareBtn.addEventListener('click', () => {
+
+    const aInitial = Number(document.getElementById('optionAInitial').value);
+    const aFinal = Number(document.getElementById('optionAFinal').value);
+    const bInitial = Number(document.getElementById('optionBInitial').value);
+    const bFinal =Number(document.getElementById('optionBFinal').value);
+    if (
+      aInitial <= 0 ||
+      bInitial <= 0) {
+      return;}
+    const roiA = ((aFinal - aInitial) / aInitial) * 100;
+    const roiB = ((bFinal - bInitial) / bInitial) * 100;
+    const winner = roiA > roiB ? 'Option A' : 'Option B';
+
+    document.getElementById(
+      'comparisonResult'
+    ).innerHTML = `
+      Option A ROI: ${roiA.toFixed(2)}%<br>
+      Option B ROI: ${roiB.toFixed(2)}%<br>
+      Better Investment:
+      <strong>${winner}</strong>
+    `;
+  });
+}
+    const projectionBtn =
+  document.getElementById('projectionBtn');
+if (projectionBtn) {
+  projectionBtn.addEventListener('click', () => {
+    const initial = Number(document.getElementById('projectionInitial').value);
+    const rate = Number(document.getElementById('projectionRate').value) / 100;
+    const years = Number(document.getElementById('projectionYears').value);
+    const tbody = document.getElementById('projectionTable');
+    tbody.innerHTML = '';
+    let current = initial;
+    for (let year = 1; year <= years; year++) {
+      current *= (1 + rate);
+      tbody.innerHTML += `
+        <tr>
+          <td>${year}</td>
+          <td>RM ${current.toFixed(2)}</td>
+        </tr>
+      `;
+    }
+  });
+}
 }
 
 document.addEventListener('DOMContentLoaded', initRoiCalculator);

@@ -260,7 +260,7 @@ function attachLogoutHandler() {
     logoutLink.addEventListener('click', function (event) {
       event.preventDefault();
       setStorage(STORAGE_KEYS.isLoggedIn, false);
-      window.location.href = '../login.html';
+      window.location.href = 'login.html';
     });
   }
 }
