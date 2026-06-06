@@ -108,7 +108,7 @@ function initLogin() {
   if (!form) {
     return;
   }
-  form.addEventListener('submit', function (event) {
+  form.addEventListener('submit', async function (event) {
     event.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -120,15 +120,46 @@ function initLogin() {
       setAlert('loginAlert', 'Please enter a valid email address.');
       return;
     }
-    const user = getStorage(STORAGE_KEYS.user, null);
-    if (!user || user.email !== email || user.password !== password) {
-      setAlert('loginAlert', 'Invalid email or password. Please try again.');
-      return;
+    try {
+      const data = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      });
+      saveData('user', data.user);
+      setStorage(STORAGE_KEYS.isLoggedIn, true);
+      redirectToDashboard();
+    } catch (err) {
+      setAlert('loginAlert', err.message);
     }
-    setStorage(STORAGE_KEYS.isLoggedIn, true);
-    redirectToDashboard();
   });
 }
+
+// function initLogin() {
+//   const form = document.getElementById('loginForm');
+//   if (!form) {
+//     return;
+//   }
+//   form.addEventListener('submit', function (event) {
+//     event.preventDefault();
+//     const email = document.getElementById('loginEmail').value.trim();
+//     const password = document.getElementById('loginPassword').value;
+//     if (!email || !password) {
+//       setAlert('loginAlert', 'Please enter both email and password.');
+//       return;
+//     }
+//     if (!validateEmail(email)) {
+//       setAlert('loginAlert', 'Please enter a valid email address.');
+//       return;
+//     }
+//     const user = getStorage(STORAGE_KEYS.user, null);
+//     if (!user || user.email !== email || user.password !== password) {
+//       setAlert('loginAlert', 'Invalid email or password. Please try again.');
+//       return;
+//     }
+//     setStorage(STORAGE_KEYS.isLoggedIn, true);
+//     redirectToDashboard();
+//   });
+// }
 
 function initRegister() {
   const form = document.getElementById('registerForm');
@@ -342,7 +373,7 @@ if (registerForm) {
     }
   });
 
-  registerForm.addEventListener("submit", function (e) {
+registerForm.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
@@ -356,56 +387,96 @@ if (registerForm) {
       return;
     }
 
-    const user = {
-      name,
-      email,
-      password
-      };
+    try {
+      const data = await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password })
+      });
 
-    saveData("user", user);
+      alert("Registration successful!");
 
-    alert("Registration successful!");
-
-    window.location.href = "login.html";
+      window.location.href = "login.html";
+    } catch (err) {
+      alert(err.message);
+    }
   });
+
+  // registerForm.addEventListener("submit", function (e) {
+
+  //   e.preventDefault();
+
+  //   const name = document.getElementById("registerName").value;
+  //   const email = document.getElementById("registerEmail").value;
+  //   const password = document.getElementById("registerPassword").value;
+  //   const confirmPassword = document.getElementById("confirmPassword").value;
+
+  //   if (password !== confirmPassword) {
+  //     alert("Passwords do not match!");
+  //     return;
+  //   }
+
+  //   const user = {
+  //     name,
+  //     email,
+  //     password
+  //     };
+
+  //   saveData("user", user);
+
+  //   alert("Registration successful!");
+
+  //   window.location.href = "login.html";
+  // });
 }
 
 // =====================================
 // LOGIN
 // =====================================
 
-const loginForm = document.getElementById("loginForm");
+const API = 'http://localhost:5001/api';
 
-if (loginForm) {
-
-  loginForm.addEventListener("submit", function (e) {
-
-    e.preventDefault();
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    const savedUser = getData("user");
-
-    if (!savedUser) {
-      alert("No account found!");
-      return;
-    }
-
-    if (
-      email === savedUser.email &&
-      password === savedUser.password
-    ) {
-      localStorage.setItem("isLoggedIn", "true");
-
-      alert("Login successful!");
-
-      window.location.href = "dashboard.html";
-    }
-    else {
-      alert("Invalid email or password!");
-    }
-  });
+async function apiFetch(path, options = {}) {
+  const user = getData("user");
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (user && user.id) headers['x-user-id'] = user.id;
+  const res = await fetch(`${API}${path}`, { ...options, headers });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Something went wrong');
+  return data;
 }
+
+// const loginForm = document.getElementById("loginForm");
+
+// if (loginForm) {
+
+//   loginForm.addEventListener("submit", function (e) {
+
+//     e.preventDefault();
+//     const email = document.getElementById("loginEmail").value;
+//     const password = document.getElementById("loginPassword").value;
+
+//     const savedUser = getData("user");
+
+//     if (!savedUser) {
+//       alert("No account found!");
+//       return;
+//     }
+
+//     if (
+//       email === savedUser.email &&
+//       password === savedUser.password
+//     ) {
+//       localStorage.setItem("isLoggedIn", "true");
+
+//       alert("Login successful!");
+
+//       window.location.href = "dashboard.html";
+//     }
+//     else {
+//       alert("Invalid email or password!");
+//     }
+//   });
+// }
 
 const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");

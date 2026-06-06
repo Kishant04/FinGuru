@@ -32,8 +32,8 @@ function updateDashboardTotals() {
   if (balance) balance.textContent = `RM ${budget.balance.toFixed(2)}`;
 }
 
-function updateRiskDisplay() {
-  const riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
+function updateRiskDisplay(level) {
+  const riskLevel = level || getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
   const badge = document.getElementById('riskBadge');
   const riskResult = document.getElementById('riskResult');
 
@@ -57,9 +57,9 @@ function calculateRiskLevel(score) {
   return 'Aggressive';
 }
 
-function initCharts() {
-  const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0 });
-  const goals = getStorage(STORAGE_KEYS.goals, []);
+function initCharts(budget, goals) {
+  budget = budget || getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0 });
+  goals = goals || getStorage(STORAGE_KEYS.goals, []);
 
   const budgetCanvas = document.getElementById('budgetChart');
   if (budgetCanvas) {
@@ -109,10 +109,91 @@ function initCharts() {
   }
 }
 
-function initDashboard() {
+// function initDashboard() {
+//   const budgetForm = document.getElementById('budgetForm');
+//   if (budgetForm) {
+//     budgetForm.addEventListener('submit', function (event) {
+//       event.preventDefault();
+//       const income = Number(document.getElementById('budgetIncome').value);
+//       const expenses = Number(document.getElementById('budgetExpenses').value);
+//       if (isNaN(income) || isNaN(expenses) || income < 0 || expenses < 0) {
+//         setAlert('budgetStatus', 'Please provide valid income and expense amounts.', 'danger');
+//         return;
+//       }
+//       const balance = income - expenses;
+//       const status = balance < 0 ? 'Overspending - consider lowering expenses.' : 'Saving well - keep it up!';
+//       const budget = { income, expenses, balance, status };
+//       setStorage(STORAGE_KEYS.budget, budget);
+//       updateBudgetSummary();
+//       updateDashboardTotals();
+//       initCharts();
+//       setAlert('budgetStatus', `Budget analyzed. ${status}`, 'success');
+//     });
+//   }
+
+//   const riskForm = document.getElementById('riskQuizForm');
+//   if (riskForm) {
+//     riskForm.addEventListener('submit', function (event) {
+//       event.preventDefault();
+//       const answers = [
+//         Number(document.getElementById('riskQuestion1').value),
+//         Number(document.getElementById('riskQuestion2').value),
+//         Number(document.getElementById('riskQuestion3').value),
+//         Number(document.getElementById('riskQuestion4').value),
+//         Number(document.getElementById('riskQuestion5').value)
+//       ];
+//       if (answers.some((value) => !value)) {
+//         setAlert('riskResult', 'Please answer all quiz questions.', 'danger');
+//         return;
+//       }
+//       const score = answers.reduce((sum, value) => sum + value, 0);
+//       const result = calculateRiskLevel(score);
+//       setStorage(STORAGE_KEYS.riskLevel, result);
+//       updateRiskDisplay();
+//       setAlert('riskResult', `Your investor profile is ${result}.`, 'success');
+//     });
+//   }
+
+//   // Welcome user
+//   const user = getStorage(STORAGE_KEYS.user, null);
+//   const welcomeName = document.getElementById('welcomeName');
+//   if (welcomeName && user) welcomeName.textContent = user.name;
+
+//   updateBudgetSummary();
+//   updateDashboardTotals();
+//   updateRiskDisplay();
+//   initCharts();
+// }
+
+async function loadDashboardData() {
+  try {
+    const data = await apiFetch('/dashboard');
+    const budget = data.budget || { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' };
+    const goals = data.goals || [];
+
+    const balance = document.getElementById('balance');
+    const budgetResult = document.getElementById('budgetResult');
+    const budgetStatus = document.getElementById('budgetStatus');
+    const totalGoals = document.getElementById('totalGoals');
+    const totalSavingsEl = document.getElementById('totalSavings');
+
+    if (balance) balance.textContent = budget.balance.toFixed(2);
+    if (budgetResult) budgetResult.textContent = budget.balance.toFixed(2);
+    if (budgetStatus) budgetStatus.textContent = budget.status;
+    if (totalGoals) totalGoals.textContent = goals.length;
+    if (totalSavingsEl) totalSavingsEl.textContent = `RM ${data.totals.totalSavings.toFixed(2)}`;
+
+    updateRiskDisplay(data.risk.level);
+    initCharts(budget, goals);
+  } catch (err) {
+    console.error('Dashboard load error:', err.message);
+  }
+}
+
+async function initDashboard() {
   const budgetForm = document.getElementById('budgetForm');
   if (budgetForm) {
-    budgetForm.addEventListener('submit', function (event) {
+    budgetForm.addEventListener('submit', async function (event) {
       event.preventDefault();
       const income = Number(document.getElementById('budgetIncome').value);
       const expenses = Number(document.getElementById('budgetExpenses').value);
@@ -120,20 +201,19 @@ function initDashboard() {
         setAlert('budgetStatus', 'Please provide valid income and expense amounts.', 'danger');
         return;
       }
-      const balance = income - expenses;
-      const status = balance < 0 ? 'Overspending - consider lowering expenses.' : 'Saving well - keep it up!';
-      const budget = { income, expenses, balance, status };
-      setStorage(STORAGE_KEYS.budget, budget);
-      updateBudgetSummary();
-      updateDashboardTotals();
-      initCharts();
-      setAlert('budgetStatus', `Budget analyzed. ${status}`, 'success');
+      try {
+        const budget = await apiFetch('/budget', { method: 'PUT', body: JSON.stringify({ income, expenses }) });
+        setAlert('budgetStatus', `Budget analyzed. ${budget.status}`, 'success');
+        await loadDashboardData();
+      } catch (err) {
+        setAlert('budgetStatus', err.message, 'danger');
+      }
     });
   }
 
   const riskForm = document.getElementById('riskQuizForm');
   if (riskForm) {
-    riskForm.addEventListener('submit', function (event) {
+    riskForm.addEventListener('submit', async function (event) {
       event.preventDefault();
       const answers = [
         Number(document.getElementById('riskQuestion1').value),
@@ -146,11 +226,13 @@ function initDashboard() {
         setAlert('riskResult', 'Please answer all quiz questions.', 'danger');
         return;
       }
-      const score = answers.reduce((sum, value) => sum + value, 0);
-      const result = calculateRiskLevel(score);
-      setStorage(STORAGE_KEYS.riskLevel, result);
-      updateRiskDisplay();
-      setAlert('riskResult', `Your investor profile is ${result}.`, 'success');
+      try {
+        const profile = await apiFetch('/risk', { method: 'PUT', body: JSON.stringify({ answers }) });
+        updateRiskDisplay(profile.level);
+        setAlert('riskResult', `Your investor profile is ${profile.level}.`, 'success');
+      } catch (err) {
+        setAlert('riskResult', err.message, 'danger');
+      }
     });
   }
 
@@ -159,10 +241,7 @@ function initDashboard() {
   const welcomeName = document.getElementById('welcomeName');
   if (welcomeName && user) welcomeName.textContent = user.name;
 
-  updateBudgetSummary();
-  updateDashboardTotals();
-  updateRiskDisplay();
-  initCharts();
+  await loadDashboardData();
 }
 
 document.addEventListener('DOMContentLoaded', initDashboard);

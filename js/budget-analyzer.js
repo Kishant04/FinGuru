@@ -1,8 +1,8 @@
 
 let budgetChartInstance = null;
 
-function renderBudgetPage() {
-  const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
+function renderBudgetPage(budget) {
+  budget = budget || getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
 
   const income = Number(budget.income || 0);
   const expenses = Number(budget.expenses || 0);
@@ -120,10 +120,10 @@ function renderBudgetPage() {
   if (expensesInput) expensesInput.value = expenses || '';
 }
 
-function initBudgetAnalyzer() {
+async function initBudgetAnalyzer() {
   const form = document.getElementById('budgetForm');
   if (form) {
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
       event.preventDefault();
       const income = Number(document.getElementById('budgetIncome').value);
       const expenses = Number(document.getElementById('budgetExpenses').value);
@@ -131,14 +131,42 @@ function initBudgetAnalyzer() {
         setAlert('budgetAlert', 'Please enter valid income and expense amounts.', 'danger');
         return;
       }
-      const balance = income - expenses;
-      const status = balance < 0 ? 'Overspending - consider lowering expenses.' : 'Saving well - keep it up!';
-      setStorage(STORAGE_KEYS.budget, { income, expenses, balance, status });
-      renderBudgetPage();
-      setAlert('budgetAlert', 'Budget updated successfully.', 'success');
+      try {
+        const budget = await apiFetch('/budget', { method: 'PUT', body: JSON.stringify({ income, expenses }) });
+        renderBudgetPage(budget);
+        setAlert('budgetAlert', 'Budget updated successfully.', 'success');
+      } catch (err) {
+        setAlert('budgetAlert', err.message, 'danger');
+      }
     });
   }
-  renderBudgetPage();
+  try {
+    const budget = await apiFetch('/budget');
+    renderBudgetPage(budget);
+  } catch (err) {
+    renderBudgetPage();
+  }
 }
+
+// function initBudgetAnalyzer() {
+//   const form = document.getElementById('budgetForm');
+//   if (form) {
+//     form.addEventListener('submit', function(event) {
+//       event.preventDefault();
+//       const income = Number(document.getElementById('budgetIncome').value);
+//       const expenses = Number(document.getElementById('budgetExpenses').value);
+//       if (isNaN(income) || isNaN(expenses) || income < 0 || expenses < 0) {
+//         setAlert('budgetAlert', 'Please enter valid income and expense amounts.', 'danger');
+//         return;
+//       }
+//       const balance = income - expenses;
+//       const status = balance < 0 ? 'Overspending - consider lowering expenses.' : 'Saving well - keep it up!';
+//       setStorage(STORAGE_KEYS.budget, { income, expenses, balance, status });
+//       renderBudgetPage();
+//       setAlert('budgetAlert', 'Budget updated successfully.', 'success');
+//     });
+//   }
+//   renderBudgetPage();
+// }
 
 document.addEventListener('DOMContentLoaded', initBudgetAnalyzer);

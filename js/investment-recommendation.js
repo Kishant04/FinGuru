@@ -16,8 +16,16 @@ function getRiskRecommendations(riskLevel) {
   return options[riskLevel] || options.Moderate;
 }
 
-function initInvestmentRecommendation() {
-  const riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
+async function initInvestmentRecommendation() {
+  let riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
+
+  try {
+    const profile = await apiFetch('/risk');
+    riskLevel = profile.level || riskLevel;
+  } catch (err) {
+    console.warn('Could not load risk profile:', err.message);
+  }
+
   const container = document.getElementById('recommendationContainer');
   const badge = document.getElementById('riskBadge');
 
@@ -45,5 +53,35 @@ function initInvestmentRecommendation() {
     </div>
   `).join('');
 }
+
+// function initInvestmentRecommendation() {
+//   const riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
+//   const container = document.getElementById('recommendationContainer');
+//   const badge = document.getElementById('riskBadge');
+
+//   if (badge) {
+//     badge.textContent = riskLevel;
+//     if (riskLevel === 'Conservative') {
+//       badge.className = 'badge bg-success fs-6 px-4 py-2';
+//     } else if (riskLevel === 'Moderate') {
+//       badge.className = 'badge bg-primary fs-6 px-4 py-2';
+//     } else {
+//       badge.className = 'badge bg-danger fs-6 px-4 py-2';
+//     }
+//   }
+
+//   if (!container) return;
+
+//   const recommendation = getRiskRecommendations(riskLevel);
+
+//   container.innerHTML = recommendation.assets.map(asset => `
+//     <div class="col-lg-4">
+//       <div class="card recommendation-card h-100 shadow-sm p-4 d-flex flex-column">
+//         <h4 class="mb-3">${asset}</h4>
+//         <p class="text-muted">${recommendation.description}</p>
+//       </div>
+//     </div>
+//   `).join('');
+// }
 
 document.addEventListener('DOMContentLoaded', initInvestmentRecommendation);

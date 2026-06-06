@@ -2,7 +2,7 @@ function initRoiCalculator() {
   // roi fixed
   const roiForm = document.getElementById('roiForm');
   if (roiForm) {
-    roiForm.addEventListener('submit', function (event) {
+    roiForm.addEventListener('submit', async function (event) {
       event.preventDefault();
       const initial = Number(document.getElementById('initialInvestment').value);
       const finalValue = Number(document.getElementById('finalValue').value);
@@ -14,11 +14,28 @@ function initRoiCalculator() {
       const roi = (profit / initial) * 100;
       document.getElementById('roiResult').textContent = `${roi.toFixed(2)}%`;
       document.getElementById('profitResult').textContent = `RM ${profit.toFixed(2)}`;
+      try {
+        await apiFetch('/roi', { method: 'POST', body: JSON.stringify({ type: 'roi', inputs: { initial, finalValue }, results: { roi, profit } }) });
+      } catch (err) { console.warn('Could not save ROI history:', err.message); }
     });
+
+    // roiForm.addEventListener('submit', function (event) {
+    //   event.preventDefault();
+    //   const initial = Number(document.getElementById('initialInvestment').value);
+    //   const finalValue = Number(document.getElementById('finalValue').value);
+    //   if (isNaN(initial) || isNaN(finalValue) || initial <= 0 || finalValue < 0) {
+    //     setAlert('roiResult', 'Please enter valid investment values.', 'danger');
+    //     return;
+    //   }
+    //   const profit = finalValue - initial;
+    //   const roi = (profit / initial) * 100;
+    //   document.getElementById('roiResult').textContent = `${roi.toFixed(2)}%`;
+    //   document.getElementById('profitResult').textContent = `RM ${profit.toFixed(2)}`;
+    // });
   }
   const compoundForm = document.getElementById('compoundForm');
   if (compoundForm) {
-    compoundForm.addEventListener('submit', function (event) {
+    compoundForm.addEventListener('submit', async function (event) {
       event.preventDefault();
       const principal = Number(document.getElementById('compoundPrincipal').value);
       const rate = Number(document.getElementById('compoundRate').value) / 100;
@@ -32,7 +49,26 @@ function initRoiCalculator() {
       const earned = amount - principal;
       document.getElementById('compoundResult').textContent = `RM ${amount.toFixed(2)}`;
       document.getElementById('compoundInterestResult').textContent = `RM ${earned.toFixed(2)}`;
+      try {
+        await apiFetch('/roi', { method: 'POST', body: JSON.stringify({ type: 'compound', inputs: { principal, rate: rate * 100, times, years }, results: { amount, earned } }) });
+      } catch (err) { console.warn('Could not save compound history:', err.message); }
     });
+
+    // compoundForm.addEventListener('submit', function (event) {
+    //   event.preventDefault();
+    //   const principal = Number(document.getElementById('compoundPrincipal').value);
+    //   const rate = Number(document.getElementById('compoundRate').value) / 100;
+    //   const times = Number(document.getElementById('compoundFrequency').value);
+    //   const years = Number(document.getElementById('compoundYears').value);
+    //   if (isNaN(principal) || principal <= 0 || isNaN(rate) || rate < 0 || isNaN(times) || times <= 0 || isNaN(years) || years <= 0) {
+    //     setAlert('compoundResult', 'Please enter valid compound interest values.', 'danger');
+    //     return;
+    //   }
+    //   const amount = principal * Math.pow(1 + rate / times, times * years);
+    //   const earned = amount - principal;
+    //   document.getElementById('compoundResult').textContent = `RM ${amount.toFixed(2)}`;
+    //   document.getElementById('compoundInterestResult').textContent = `RM ${earned.toFixed(2)}`;
+    // });
   }
   const compareBtn = document.getElementById('compareBtn');
 if (compareBtn) {
