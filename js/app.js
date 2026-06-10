@@ -212,16 +212,40 @@ function initRegister() {
 
 function initProfile() {
   const user = getStorage(STORAGE_KEYS.user, null);
-  const goals = getStorage(STORAGE_KEYS.goals, []);
-  const budget = getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
   if (user) {
-    document.getElementById('profileName').textContent = user.name;
-    document.getElementById('profileEmail').textContent = user.email;
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    if (profileName) profileName.value = user.name;
+    if (profileEmail) profileEmail.value = user.email;
   }
-  document.getElementById('profileGoalsCount').textContent = goals.length;
-  document.getElementById('profileSavings').textContent = goals.reduce((sum, goal) => sum + Number(goal.saved || 0), 0).toFixed(2);
-  document.getElementById('profileBudgetStatus').textContent = budget.status;
-  updateRiskDisplay();
+
+  const saveBtn = document.getElementById('saveProfileBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+      const name = document.getElementById('profileName').value.trim();
+      const email = document.getElementById('profileEmail').value.trim();
+      if (!name || !email || !validateEmail(email)) {
+        setAlert('profileAlert', 'Please enter a valid name and email.', 'danger');
+        return;
+      }
+      const updatedUser = { ...getStorage(STORAGE_KEYS.user, {}), name, email };
+      setStorage(STORAGE_KEYS.user, updatedUser);
+      setAlert('profileAlert', 'Profile updated successfully.', 'success');
+    });
+  }
+
+  initDeleteAccount();
+}
+
+function initDeleteAccount() {
+  const btn = document.getElementById('deleteAccountBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    const confirmed = confirm('Are you sure? This will permanently delete your account and all your data.');
+    if (!confirmed) return;
+    localStorage.clear();
+    window.location.href = '../index.html';
+  });
 }
 
 function initEditProfile() {

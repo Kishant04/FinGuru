@@ -11,6 +11,17 @@ async function loadAllMarketData() {
   await fetchIndex("^DJI", "dow-price", "dow-change");       // Dow Jones
   await fetchCryptoOrGold("BTC", "btc-price", "btc-change");
   await fetchCryptoOrGold("XAU", "gold-price", "gold-change");
+
+  // draw chart after all data loaded
+  const changes = [
+  parseFloat((parseFloat(document.getElementById('nasdaq-change')?.innerText) || 0.60).toFixed(2)),
+  parseFloat((parseFloat(document.getElementById('dow-change')?.innerText) || 0.42).toFixed(2)),
+  parseFloat((parseFloat(document.getElementById('btc-change')?.innerText) || -1.20).toFixed(2)),
+  parseFloat((parseFloat(document.getElementById('gold-change')?.innerText) || 0.30).toFixed(2)),
+];
+  if (typeof renderMarketChart === 'function') {
+    renderMarketChart(changes);
+  }
 }
 
 async function fetchIndex(symbol, priceId, changeId) {
@@ -77,4 +88,43 @@ function setFallback(priceId, changeId) {
 
   document.getElementById(priceId).innerText = fallbacks[priceId];
   updateChangeUI(changeId, fallbacks[changeId]);
+}
+
+let marketChartInstance = null;
+
+function renderMarketChart(changes) {
+  const canvas = document.getElementById('marketChart');
+  if (!canvas) return;
+
+  if (marketChartInstance) marketChartInstance.destroy();
+
+  marketChartInstance = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: ['Nasdaq', 'Dow Jones', 'Bitcoin', 'Gold'],
+      datasets: [{
+        label: 'Change (%)',
+        data: changes,
+        backgroundColor: changes.map(v => v >= 0 ? '#198754' : '#dc3545'),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.raw >= 0 ? '+' : ''}${ctx.raw}%`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: val => `${parseFloat(val.toFixed(2))}%` }
+        }
+      }
+    }
+  });
 }

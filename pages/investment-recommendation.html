@@ -79,47 +79,113 @@
 </nav>
 
 <!-- MAIN CONTENT -->
-<div class="container mt-5">
+<div class="container mt-4">
 
+  <!-- HEADER -->
   <div class="mb-4">
-
     <h2>Investment Recommendation</h2>
-
-    <p class="text-muted">
-      Personalized investment suggestions based on your risk profile.
-    </p>
-
+    <p class="text-muted">Personalized investment suggestions based on your risk profile.</p>
   </div>
 
-  <!-- CURRENT RISK -->
-  <div class="card shadow-sm p-4 mb-5">
-
+  <!-- CURRENT RISK BADGE -->
+  <div class="card shadow-sm p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
       <div>
-        <h5>Your Current Risk Profile</h5>
-        <p class="text-muted mb-0">
-          Recommendations are generated from your risk profiling quiz.
-        </p>
+        <h5>Your Investor Profile</h5>
+        <p class="text-muted mb-0">Based on your quiz answers below.</p>
       </div>
-
-      <span class="badge bg-primary fs-6 px-4 py-2" id="riskBadge">
-        Moderate
-      </span>
-
+      <span class="badge bg-primary fs-6 px-4 py-2" id="riskBadge">Moderate</span>
     </div>
-
   </div>
 
-  <!-- RECOMMENDATION AREA from js -->
-  <div class="row g-4" id="recommendationContainer">
-      <!-- JS will inject recommendation cards here -->
+  <!-- QUIZ -->
+  <div class="card shadow-sm p-4 mb-4">
+    <h5 class="mb-1">Risk Profiling Quiz</h5>
+    <p class="text-muted small mb-3">Answer all 5 questions to get your investor profile.</p>
+    <form id="riskQuizForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">1. Your investment timeline?</label>
+          <select class="form-select" id="riskQuestion1" required>
+            <option value="">Choose one</option>
+            <option value="1">Less than 2 years</option>
+            <option value="2">2 to 5 years</option>
+            <option value="3">More than 5 years</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">2. Comfort with market swings?</label>
+          <select class="form-select" id="riskQuestion2" required>
+            <option value="">Choose one</option>
+            <option value="1">Very uncomfortable</option>
+            <option value="2">Somewhat comfortable</option>
+            <option value="3">Very comfortable</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">3. Primary goal?</label>
+          <select class="form-select" id="riskQuestion3" required>
+            <option value="">Choose one</option>
+            <option value="1">Protect savings</option>
+            <option value="2">Balanced growth</option>
+            <option value="3">Aggressive growth</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">4. Reaction to a 15% drop?</label>
+          <select class="form-select" id="riskQuestion4" required>
+            <option value="">Choose one</option>
+            <option value="1">Sell immediately</option>
+            <option value="2">Wait and review</option>
+            <option value="3">Buy more</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">5. Emergency savings ready?</label>
+          <select class="form-select" id="riskQuestion5" required>
+            <option value="">Choose one</option>
+            <option value="1">Not enough</option>
+            <option value="2">Somewhat prepared</option>
+            <option value="3">Well covered</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Get My Profile</button>
+    </form>
+    <div class="mt-3" id="quizAlert"></div>
   </div>
 
-  <!-- Retake Quiz for Risk Profiling -->
-   <div class="text-center mt-5 mb-4">
-    <p class="text-muted">Not happy with your risk profile?</p>
-    <a href="dashboard.html" class="btn btn-outline-primary">Retake Risk Quiz</a>
+  <!-- RECOMMENDATIONS -->
+  <div class="row g-4 mb-4" id="recommendationContainer">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- EDUCATIONAL RESOURCES -->
+  <div class="mb-4">
+    <h5 class="mb-3">Learn More About Investing</h5>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="card p-3 shadow-sm h-100 d-flex flex-column">
+          <h6 class="fw-bold">What is Risk Tolerance?</h6>
+          <p class="text-muted small flex-grow-1">Your ability and willingness to lose some or all of your investment in exchange for greater potential returns.</p>
+          <a href="https://www.investopedia.com/terms/r/risktolerance.asp" target="_blank" class="btn btn-outline-primary btn-sm mt-2">Read More</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3 shadow-sm h-100 d-flex flex-column">
+          <h6 class="fw-bold">Beginner's Guide to Unit Trusts</h6>
+          <p class="text-muted small flex-grow-1">Unit trusts pool money from many investors to purchase a diversified portfolio managed by professionals.</p>
+          <a href="https://www.sc.com.my" target="_blank" class="btn btn-outline-primary btn-sm mt-2">Read More</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3 shadow-sm h-100 d-flex flex-column">
+          <h6 class="fw-bold">Understanding Bursa Malaysia</h6>
+          <p class="text-muted small flex-grow-1">Bursa Malaysia is the national stock exchange. Learn how to start investing in Malaysian equities safely.</p>
+          <a href="https://www.bursamarketplace.com" target="_blank" class="btn btn-outline-primary btn-sm mt-2">Read More</a>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

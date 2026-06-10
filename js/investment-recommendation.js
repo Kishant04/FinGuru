@@ -16,6 +16,44 @@ function getRiskRecommendations(riskLevel) {
   return options[riskLevel] || options.Moderate;
 }
 
+function calculateRiskLevel(score) {
+  if (score <= 7) return 'Conservative';
+  if (score <= 11) return 'Moderate';
+  return 'Aggressive';
+}
+
+function initQuiz() {
+  const form = document.getElementById('riskQuizForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const answers = [
+      Number(document.getElementById('riskQuestion1').value),
+      Number(document.getElementById('riskQuestion2').value),
+      Number(document.getElementById('riskQuestion3').value),
+      Number(document.getElementById('riskQuestion4').value),
+      Number(document.getElementById('riskQuestion5').value)
+    ];
+    if (answers.some(v => !v)) {
+      setAlert('quizAlert', 'Please answer all 5 questions.', 'danger');
+      return;
+    }
+    const score = answers.reduce((sum, v) => sum + v, 0);
+    const result = calculateRiskLevel(score);
+    try {
+      const profile = await apiFetch('/risk', { method: 'PUT', body: JSON.stringify({ answers }) });
+      setStorage(STORAGE_KEYS.riskLevel, profile.level);
+      await initInvestmentRecommendation();
+      setAlert('quizAlert', `Your investor profile is ${profile.level}.`, 'success');
+    } catch (err) {
+      setStorage(STORAGE_KEYS.riskLevel, result);
+      await initInvestmentRecommendation();
+      setAlert('quizAlert', `Your investor profile is ${result}.`, 'success');
+    }
+  });
+}
+
 async function initInvestmentRecommendation() {
   let riskLevel = getStorage(STORAGE_KEYS.riskLevel, 'Moderate');
 
@@ -52,6 +90,8 @@ async function initInvestmentRecommendation() {
       </div>
     </div>
   `).join('');
+
+  initQuiz(); 
 }
 
 // function initInvestmentRecommendation() {
