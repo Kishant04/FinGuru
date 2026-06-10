@@ -433,7 +433,8 @@ registerForm.addEventListener("submit", async function (e) {
 // LOGIN
 // =====================================
 
-const API = 'http://localhost:5001/api';
+// Backend API base. Matches local dev server port (5002).
+const API = 'http://localhost:5002/api';
 
 async function apiFetch(path, options = {}) {
   const user = getData("user");

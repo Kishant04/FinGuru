@@ -14,8 +14,10 @@ const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 
-// Connect to MongoDB.
-connectDB();
+// Connect to MongoDB. If connection fails, continue running the server in
+// frontend-only mode so static pages can be served during local development.
+let dbConnected = false;
+(async () => { dbConnected = await connectDB(); })();
 
 // --- Middleware ---
 app.use(cors());            // allow the frontend to call this API
@@ -49,7 +51,9 @@ app.get('/', (req, res) => {
 });
 
 // --- Start the server ---
-const PORT = process.env.PORT || 5001;
+// Force using port 5002 for local development to avoid PORT env collisions.
+const PORT = 5002;
 app.listen(PORT, () => {
   console.log(`FinGuru server running on http://localhost:${PORT}`);
+  if (!dbConnected) console.warn('Warning: MongoDB not connected — API endpoints may be unavailable.');
 });

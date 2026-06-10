@@ -5,7 +5,13 @@ function renderBudgetPage(budget) {
   budget = budget || getStorage(STORAGE_KEYS.budget, { income: 0, expenses: 0, balance: 0, status: 'No budget data yet.' });
 
   const income = Number(budget.income || 0);
-  const expenses = Number(budget.expenses || 0);
+  // Support category breakdown when available
+  const food = Number(budget.food || (budget.expensesBreakdown && budget.expensesBreakdown.food) || 0);
+  const transport = Number(budget.transport || (budget.expensesBreakdown && budget.expensesBreakdown.transport) || 0);
+  const entertainment = Number(budget.entertainment || (budget.expensesBreakdown && budget.expensesBreakdown.entertainment) || 0);
+  const bills = Number(budget.bills || (budget.expensesBreakdown && budget.expensesBreakdown.bills) || 0);
+  const others = Number(budget.others || (budget.expensesBreakdown && budget.expensesBreakdown.others) || 0);
+  const expenses = food + transport + entertainment + bills + others;
   const balance = Number(budget.balance || 0);
   const savingsRate = income > 0 ? Math.round((balance / income) * 100) : 0;
 
@@ -95,15 +101,14 @@ function renderBudgetPage(budget) {
   const canvas = document.getElementById('budgetChart');
   if (canvas) {
     if (budgetChartInstance) budgetChartInstance.destroy();
+    const labels = ['Food', 'Transport', 'Entertainment', 'Bills', 'Others', 'Savings'];
+    const data = [food, transport, entertainment, bills, others, balance > 0 ? balance : 0];
+    const colors = ['#ffc107', '#0d6efd', '#fd7e14', '#6f42c1', '#adb5bd', '#198754'];
     budgetChartInstance = new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['Expenses', 'Savings'],
-        datasets: [{
-          data: [expenses, balance > 0 ? balance : 0],
-          backgroundColor: ['#dc3545', '#198754'],
-          borderWidth: 0,
-        }]
+        labels,
+        datasets: [{ data, backgroundColor: colors, borderWidth: 0 }]
       },
       options: {
         responsive: true,
@@ -115,9 +120,17 @@ function renderBudgetPage(budget) {
 
   // Pre-fill form
   const incomeInput = document.getElementById('budgetIncome');
-  const expensesInput = document.getElementById('budgetExpenses');
+  const foodInput = document.getElementById('budgetFood');
+  const transportInput = document.getElementById('budgetTransport');
+  const entertainmentInput = document.getElementById('budgetEntertainment');
+  const billsInput = document.getElementById('budgetBills');
+  const othersInput = document.getElementById('budgetOthers');
   if (incomeInput) incomeInput.value = income || '';
-  if (expensesInput) expensesInput.value = expenses || '';
+  if (foodInput) foodInput.value = food || '';
+  if (transportInput) transportInput.value = transport || '';
+  if (entertainmentInput) entertainmentInput.value = entertainment || '';
+  if (billsInput) billsInput.value = bills || '';
+  if (othersInput) othersInput.value = others || '';
 }
 
 async function initBudgetAnalyzer() {
@@ -126,13 +139,19 @@ async function initBudgetAnalyzer() {
     form.addEventListener('submit', async function(event) {
       event.preventDefault();
       const income = Number(document.getElementById('budgetIncome').value);
-      const expenses = Number(document.getElementById('budgetExpenses').value);
-      if (isNaN(income) || isNaN(expenses) || income < 0 || expenses < 0) {
+      const foodVal = Number(document.getElementById('budgetFood').value || 0);
+      const transportVal = Number(document.getElementById('budgetTransport').value || 0);
+      const entertainmentVal = Number(document.getElementById('budgetEntertainment').value || 0);
+      const billsVal = Number(document.getElementById('budgetBills').value || 0);
+      const othersVal = Number(document.getElementById('budgetOthers').value || 0);
+      const expensesTotal = foodVal + transportVal + entertainmentVal + billsVal + othersVal;
+      if (isNaN(income) || isNaN(expensesTotal) || income < 0 || expensesTotal < 0) {
         setAlert('budgetAlert', 'Please enter valid income and expense amounts.', 'danger');
         return;
       }
       try {
-        const budget = await apiFetch('/budget', { method: 'PUT', body: JSON.stringify({ income, expenses }) });
+        const body = { income, expenses: expensesTotal, expensesBreakdown: { food: foodVal, transport: transportVal, entertainment: entertainmentVal, bills: billsVal, others: othersVal } };
+        const budget = await apiFetch('/budget', { method: 'PUT', body: JSON.stringify(body) });
         renderBudgetPage(budget);
         setAlert('budgetAlert', 'Budget updated successfully.', 'success');
       } catch (err) {
