@@ -19,6 +19,15 @@ const budgetSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'Expenses cannot be negative'],
     },
+    // Per-category breakdown of expenses. Stored so the chart/categories
+    // persist across devices instead of being lost on save.
+    expensesBreakdown: {
+      food: { type: Number, default: 0, min: [0, 'Amount cannot be negative'] },
+      transport: { type: Number, default: 0, min: [0, 'Amount cannot be negative'] },
+      entertainment: { type: Number, default: 0, min: [0, 'Amount cannot be negative'] },
+      bills: { type: Number, default: 0, min: [0, 'Amount cannot be negative'] },
+      others: { type: Number, default: 0, min: [0, 'Amount cannot be negative'] },
+    },
     balance: {
       type: Number,
       default: 0,
