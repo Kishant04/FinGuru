@@ -5,8 +5,8 @@ const protect = require('../middleware/auth');
 const router = express.Router();
 router.use(protect);
 
-// GET /api/roi  - list the user's saved calculations (most recent first)
-router.get('/', async (req, res) => {
+// Controller functions (exported for unit testing)
+async function getROI(req, res) {
   try {
     const calculations = await RoiCalculation.find({ userId: req.user._id })
       .sort({ createdAt: -1 })
@@ -15,11 +15,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// POST /api/roi  - save a calculation to history
-// Body: { type: 'roi'|'compound', inputs: {...}, results: {...} }
-router.post('/', async (req, res) => {
+async function createROI(req, res) {
   try {
     const { type, inputs, results } = req.body;
 
@@ -37,6 +35,12 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
+
+// Routes
+router.get('/', getROI);
+router.post('/', createROI);
 
 module.exports = router;
+module.exports.getROI = getROI;
+module.exports.createROI = createROI;

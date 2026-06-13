@@ -11,10 +11,8 @@ function publicUser(user) {
   return { id: user._id, name: user.name, email: user.email };
 }
 
-// ---------------------------------------------
-// POST /api/auth/register  - create a new account
-// ---------------------------------------------
-router.post('/register', async (req, res) => {
+// Controller functions (exported for unit testing)
+async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
@@ -43,12 +41,9 @@ router.post('/register', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// ---------------------------------------------
-// POST /api/auth/login  - log in to an account
-// ---------------------------------------------
-router.post('/login', async (req, res) => {
+async function login(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -73,19 +68,13 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// ---------------------------------------------
-// GET /api/auth/me  - get the logged-in user's profile
-// ---------------------------------------------
-router.get('/me', protect, (req, res) => {
+function getMe(req, res) {
   res.json(publicUser(req.user));
-});
+}
 
-// ---------------------------------------------
-// PUT /api/auth/profile  - update name / email
-// ---------------------------------------------
-router.put('/profile', protect, async (req, res) => {
+async function updateProfile(req, res) {
   try {
     const { name, email } = req.body;
     const user = await User.findById(req.user._id);
@@ -107,12 +96,9 @@ router.put('/profile', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// ---------------------------------------------
-// PUT /api/auth/password  - change password
-// ---------------------------------------------
-router.put('/password', protect, async (req, res) => {
+async function changePassword(req, res) {
   try {
     const { currentPassword, newPassword } = req.body;
     if (!currentPassword || !newPassword) {
@@ -131,6 +117,18 @@ router.put('/password', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
+
+// Routes
+router.post('/register', register);
+router.post('/login', login);
+router.get('/me', protect, getMe);
+router.put('/profile', protect, updateProfile);
+router.put('/password', protect, changePassword);
 
 module.exports = router;
+module.exports.register = register;
+module.exports.login = login;
+module.exports.getMe = getMe;
+module.exports.updateProfile = updateProfile;
+module.exports.changePassword = changePassword;

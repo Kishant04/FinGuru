@@ -7,18 +7,17 @@ const router = express.Router();
 // Every route here is protected - the user must be logged in.
 router.use(protect);
 
-// GET /api/goals  - list all goals for the logged-in user
-router.get('/', async (req, res) => {
+// Controller functions (exported for unit testing)
+async function getGoals(req, res) {
   try {
     const goals = await Goal.find({ userId: req.user._id }).sort({ createdAt: -1 });
     res.json(goals);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// POST /api/goals  - add a new goal
-router.post('/', async (req, res) => {
+async function createGoal(req, res) {
   try {
     const { name, target, saved } = req.body;
     if (!name || target == null || Number(target) <= 0) {
@@ -35,10 +34,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// PUT /api/goals/:id  - update a goal
-router.put('/:id', async (req, res) => {
+async function updateGoal(req, res) {
   try {
     // Match on both id AND userId so users can only edit their own goals.
     const goal = await Goal.findOne({ _id: req.params.id, userId: req.user._id });
@@ -56,10 +54,9 @@ router.put('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// DELETE /api/goals/:id  - delete a goal
-router.delete('/:id', async (req, res) => {
+async function deleteGoal(req, res) {
   try {
     const goal = await Goal.findOneAndDelete({
       _id: req.params.id,
@@ -72,6 +69,16 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
+
+// Routes
+router.get('/', getGoals);
+router.post('/', createGoal);
+router.put('/:id', updateGoal);
+router.delete('/:id', deleteGoal);
 
 module.exports = router;
+module.exports.getGoals = getGoals;
+module.exports.createGoal = createGoal;
+module.exports.updateGoal = updateGoal;
+module.exports.deleteGoal = deleteGoal;

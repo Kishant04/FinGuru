@@ -12,8 +12,8 @@ function calculateRiskLevel(score) {
   return 'Aggressive';
 }
 
-// GET /api/risk  - get the logged-in user's risk profile
-router.get('/', async (req, res) => {
+// Controller functions (exported for unit testing)
+async function getRisk(req, res) {
   try {
     let profile = await RiskProfile.findOne({ userId: req.user._id });
     if (!profile) {
@@ -23,10 +23,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// PUT /api/risk  - submit the risk quiz answers and save the result
-router.put('/', async (req, res) => {
+async function updateRisk(req, res) {
   try {
     // answers is an array of 5 numbers (1-3) from the quiz dropdowns.
     const { answers } = req.body;
@@ -48,6 +47,13 @@ router.put('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
+
+// Routes
+router.get('/', getRisk);
+router.put('/', updateRisk);
 
 module.exports = router;
+module.exports.getRisk = getRisk;
+module.exports.updateRisk = updateRisk;
+module.exports.calculateRiskLevel = calculateRiskLevel;

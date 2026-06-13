@@ -5,8 +5,8 @@ const protect = require('../middleware/auth');
 const router = express.Router();
 router.use(protect);
 
-// GET /api/budget  - get the logged-in user's budget
-router.get('/', async (req, res) => {
+// Controller functions (exported for unit testing)
+async function getBudget(req, res) {
   try {
     let budget = await Budget.findOne({ userId: req.user._id });
     // If somehow missing, create an empty one so the frontend always gets data.
@@ -17,10 +17,9 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-// PUT /api/budget  - analyze and save the user's budget
-router.put('/', async (req, res) => {
+async function updateBudget(req, res) {
   try {
     const income = Number(req.body.income);
     const expenses = Number(req.body.expenses);
@@ -46,6 +45,12 @@ router.put('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
+
+// Routes
+router.get('/', getBudget);
+router.put('/', updateBudget);
 
 module.exports = router;
+module.exports.getBudget = getBudget;
+module.exports.updateBudget = updateBudget;
