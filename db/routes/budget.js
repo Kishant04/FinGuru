@@ -28,6 +28,16 @@ async function updateBudget(req, res) {
       return res.status(400).json({ message: 'Please provide valid income and expenses' });
     }
 
+    // Per-category breakdown (optional). Defaults each category to 0 if not sent.
+    const b = req.body.expensesBreakdown || {};
+    const expensesBreakdown = {
+      food: Number(b.food) || 0,
+      transport: Number(b.transport) || 0,
+      entertainment: Number(b.entertainment) || 0,
+      bills: Number(b.bills) || 0,
+      others: Number(b.others) || 0,
+    };
+
     const balance = income - expenses;
     const status =
       balance < 0
@@ -37,7 +47,7 @@ async function updateBudget(req, res) {
     // upsert: update the existing budget, or create it if none exists.
     const budget = await Budget.findOneAndUpdate(
       { userId: req.user._id },
-      { income, expenses, balance, status },
+      { income, expenses, expensesBreakdown, balance, status },
       { new: true, upsert: true }
     );
 
@@ -52,5 +62,3 @@ router.get('/', getBudget);
 router.put('/', updateBudget);
 
 module.exports = router;
-module.exports.getBudget = getBudget;
-module.exports.updateBudget = updateBudget;
